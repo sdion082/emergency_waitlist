@@ -1,6 +1,6 @@
 import sqlite3
 
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -10,8 +10,8 @@ def get_db_connection():
     return conn
 
 @app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def patient_view():
+    return render_template('patient_view.html')
 
 if __name__ == "__main__":
     app.run(debug=True, port=4356)
