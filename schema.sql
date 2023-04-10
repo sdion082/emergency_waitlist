@@ -5,5 +5,5 @@ CREATE TABLE waitlist (
     name TEXT NOT NULL,
     description TEXT,
     severity INTEGER NOT NULL,
-    arrival INTEGER NOT NULL
+    arrival TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
