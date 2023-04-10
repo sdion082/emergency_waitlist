@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Waitlist - Add to Waitlist</title>
+</head>
+<body>
+    <h1>Waitlist</h1>
+    <form method="post">
+        <br><label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br><label for="description">Describe injury/illness:</label>
+        <input type="text" id="description" name="description">
+        <br><label for="severity">Severity:</label>
+        <select id="severity" name="severity" required>
+            <option disabled selected value>Please select an option</option>
+            <option value="5">5 - Very High</option>
+            <option value="4">4 - High</option>
+            <option value="3">3 - Medium</option>
+            <option value="2">2 - Low</option>
+            <option value="1">1 - Very Low</option>
+        </select>
+        <br><br><input type="submit" value="Join the waitlist">
+    </form>
+</body>
+</html>
