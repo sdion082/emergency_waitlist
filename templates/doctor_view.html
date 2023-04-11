@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Waitlist</title>
+</head>
+<body>
+    <h1>{{ patient.name }}</h1>
+    <div>
+        <p>Arrived: {{ patient.arrival }} UTC</p>
+        <p>Severity: {{ patient.severity }}/5</p>
+        <p>{{ patient.description }}</p>
+    </div>
+    <div>
+        <button>Start seeing patient</button>
+        <button>Finished with patient</button>
+    </div>
+    <br><a href="{{ url_for('waitlist_view') }}">Back to waitlist</a>
+</body>
+</html>

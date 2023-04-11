@@ -6,8 +6,10 @@
 </head>
 <body>
     <h1>Waitlist</h1>
+    <ol>
     {% for patient in waitlist %}
-        <p>{{ patient.id }}: {{ patient.name }}</p>
+        <li><a href="{{ url_for('doctor_view', patient_id=patient.id) }}">{{ patient.name }} {{ "(in progress)" if patient.in_progress}}</a></li>
     {% endfor %}
+    </ol>
 </body>
 </html>
