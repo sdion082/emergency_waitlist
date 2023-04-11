@@ -9,14 +9,17 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+def get_waitlist(conn):
+    return conn.execute('''SELECT *, (severity*10 + (strftime("%M","now") - strftime("%M",arrival)) * 0.1) AS priority_by_severity_and_arrival_time
+    FROM waitlist
+    ORDER BY priority_by_severity_and_arrival_time DESC''').fetchall()
+    #return conn.execute("SELECT * FROM waitlist").fetchall()
+
 def add_patient(conn, form_data):
     cur = conn.cursor()
-
     cur.execute("INSERT INTO waitlist (name, description, severity) VALUES (?, ?, ?)",
                 (form_data.get('name'), form_data.get('description'), int(form_data.get('severity'))))
-    
     conn.commit()
-
 
 @app.route("/")
 def patient_view():
@@ -31,6 +34,13 @@ def new_patient_form():
         return redirect(url_for('patient_view'))
     
     return render_template('new_patient_form.html')
+
+@app.route ("/waitlist/view")
+def waitlist_view():
+    conn = get_db_connection()
+    waitlist = get_waitlist(conn)
+    conn.close()
+    return render_template('waitlist.html', waitlist=waitlist)
 
 if __name__ == "__main__":
     app.run(debug=True, port=4356)
