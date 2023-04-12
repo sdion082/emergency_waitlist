@@ -25,15 +25,19 @@
                 if (this.readyState == 4 && this.status == 200) {
                     let responseJSON = JSON.parse(xhttp.responseText);
 
+                    if (responseJSON.position < 0) {
+                        window.location.replace("{{ url_for('thank_you_view') }}");
+                    }
+
                     document.getElementById("patientName").innerHTML = responseJSON.name;
 
-                    let waitTime = parseInt(responseJSON.position) * 15
+                    let waitTime = parseInt(responseJSON.position) * 15;
                     document.getElementById("waitTime").innerHTML = waitTime < 0 ? "-" : waitTime;
 
-                    document.getElementById("waitPosition").innerHTML = responseJSON.position < 0 ? "-" : responseJSON.position;
+                    document.getElementById("waitPosition").innerHTML = responseJSON.position;
 
                     var currentDate = new Date();
-                    document.getElementById("lastUpdated").innerHTML = `${currentDate.toLocaleString()}`
+                    document.getElementById("lastUpdated").innerHTML = `${currentDate.toLocaleString()}`;
                 }
             };
             xhttp.open("GET", "{{ url_for('get_wait_time', patient_id=patient_id) }}", true);

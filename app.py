@@ -73,8 +73,12 @@ def get_wait_time(patient_id):
         conn = get_db_connection()
         get_waitlist(conn)
         conn.close()
-    position = waitlist_order_cache.get(int(patient_id), -1)
+    position = waitlist_order_cache.get(int(patient_id), (-1, None))
     return {'position': position[0], 'name': position[1]}
+
+@app.route("/thank_you")
+def thank_you_view():
+    return render_template('thank_you.html')
 
 ## ADMIN ##
 
