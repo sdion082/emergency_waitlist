@@ -1,8 +1,9 @@
 import sqlite3
 
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, session
 
 app = Flask(__name__)
+app.secret_key = 'WAITLIST_SECRET_KEY' # Don't use in production
 waitlist_order_cache = None
 
 ### FUNCTIONS ###
@@ -51,17 +52,21 @@ def remove_patient(conn, patient_id):
 
 ### ROUTES ###
 
+## PATIENT ##
+
 @app.route("/", methods=['GET', 'POST'])
 def new_patient_form():
     if request.method == 'POST':
         conn = get_db_connection()
         patient_id = add_patient(conn, request.form)
         conn.close()
+        session['patient_id'] = patient_id
         return redirect(url_for('patient_view', patient_id=patient_id))
     
+    if 'patient_id' in session:
+        return redirect(url_for('patient_view', patient_id=session['patient_id']))
+    
     return render_template('new_patient_form.html')
-
-## PATIENT ##
 
 @app.route("/patient/<patient_id>")
 def patient_view(patient_id):
@@ -78,6 +83,8 @@ def get_wait_time(patient_id):
 
 @app.route("/goodbye")
 def goodbye_view():
+    if 'patient_id' in session:
+        session.pop('patient_id', None)
     return render_template('goodbye.html')
 
 ## ADMIN ##
