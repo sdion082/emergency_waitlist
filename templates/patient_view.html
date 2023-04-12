@@ -3,16 +3,19 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergency Waitlist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pico.min.css') }}">
 </head>
 <body>
-    <h1>Hi, <span id="patientName">patient</span></h1>
-    <p>Your wait time is approximately:</p>
-    <div>
-        <p><b><span id="waitTime">-</span></b> min</p>
-        <p>Your position in the line is <b><span id="waitPosition">-</span></b>.</p>
-        <p><i>Last refreshed: <span id="lastUpdated">never</span></i></p>
-    </div>
-    <p><small>Your wait time will automatically refresh every minute, or you can refresh the page for the most up to date estimate.</small></p>
+    <main class="container">
+        <h1>Hi, <span id="patientName">patient</span></h1>
+        <div style="text-align: center;">
+            <p>Your wait time is approximately:</p>
+            <p style="font-size: 50px"><b><span id="waitTime">-</span></b> min</p>
+            <p>Your position in the line is <b><span id="waitPosition">-</span></b>.</p>
+            <p><i>Last refreshed: <span id="lastUpdated">never</span></i></p>
+        </div>
+        <p><small>Your wait time will automatically refresh every minute, or you can refresh the page for the most up to date estimate.</small></p>
+    </main>
     <script type="text/javascript">
         window.onload = function() {
             setInterval(updateWaitTime, 60000); // Update wait time every minute

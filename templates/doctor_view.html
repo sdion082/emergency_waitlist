@@ -3,25 +3,29 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergency Waitlist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pico.min.css') }}">
 </head>
 <body>
-    <h1>{{ patient.name }}</h1>
-    <div>
-        <p>Arrived: {{ patient.arrival }} UTC</p>
-        <p>Severity: {{ patient.severity }}/5</p>
-        <p>{{ patient.description }}</p>
-    </div>
-    <div>
-        <button id="toggleSeeing" value="1">Start seeing patient</button>
-        <button id="finishedSeeing" hidden>Finished with patient</button>
-    </div>
-    <br><a href="{{ url_for('waitlist_view') }}">Back to waitlist</a>
+    <main class="container">
+        <h1>{{ patient.name }}</h1>
+        <div>
+            <p><b>Arrived</b>: {{ patient.arrival }} UTC</p>
+            <p><b>Severity</b>: {{ patient.severity }}/5</p>
+            <p>{{ patient.description }}</p>
+        </div>
+        <div>
+            <button id="toggleSeeing" value="1">Start seeing patient</button>
+            <button id="finishedSeeing" hidden>Finished with patient</button>
+        </div>
+        <br><a href="{{ url_for('waitlist_view') }}">Back to waitlist</a>
+    </main>
     <script type="text/javascript">
         let setButtonStates = function(progress) {
             let toggleButton = document.getElementById("toggleSeeing")
             toggleButton.innerHTML = progress ? "Stop seeing patient" : "Start seeing patient";
             toggleButton.value = progress > 0 ? 0 : 1;
-            document.getElementById("finishedSeeing").hidden = !progress
+            toggleButton.className = progress ? "secondary" : ""; // For CSS framework
+            document.getElementById("finishedSeeing").hidden = !progress;
         }
 
         document.getElementById("toggleSeeing").onclick = function() {
