@@ -12,9 +12,49 @@
         <p>{{ patient.description }}</p>
     </div>
     <div>
-        <button>Start seeing patient</button>
-        <button>Finished with patient</button>
+        <button id="toggleSeeing" value="1">Start seeing patient</button>
+        <button id="finishedSeeing" hidden>Finished with patient</button>
     </div>
     <br><a href="{{ url_for('waitlist_view') }}">Back to waitlist</a>
+    <script type="text/javascript">
+        let setButtonStates = function(progress) {
+            let toggleButton = document.getElementById("toggleSeeing")
+            toggleButton.innerHTML = progress ? "Stop seeing patient" : "Start seeing patient";
+            toggleButton.value = progress > 0 ? 0 : 1;
+            document.getElementById("finishedSeeing").hidden = !progress
+        }
+
+        document.getElementById("toggleSeeing").onclick = function() {
+            let toggleButton = document.getElementById("toggleSeeing");
+            let progress = toggleButton.value;
+            let xhttp = new XMLHttpRequest();
+            toggleButton.disabled = true;
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        let responseJSON = JSON.parse(xhttp.responseText);
+                        if (responseJSON.success != false) {
+                            setButtonStates(responseJSON.success.in_progress);
+                        }
+                    }
+                    toggleButton.disabled = false;
+                }
+            };
+            let actionURL = progress > 0 ? "{{ url_for('change_patient_progress', patient_id=patient.id, progress=1) }}" : "{{ url_for('change_patient_progress', patient_id=patient.id, progress=0) }}";
+            xhttp.open("POST", actionURL, true);
+            xhttp.send();
+        }
+
+        document.getElementById("finishedSeeing").onclick = function() {
+            proceed = confirm("Are you sure you're done with this patient?");
+            if (proceed) {
+                window.location.replace("{{ url_for('patient_finished', patient_id=patient.id) }}");
+            }
+        }
+
+        window.onload = function() {
+            setButtonStates({{ patient.in_progress }})
+        }
+    </script>
 </body>
 </html>

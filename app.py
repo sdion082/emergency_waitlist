@@ -29,7 +29,10 @@ def get_patient(conn, patient_id):
 def set_patient_progress(conn, patient_id, progress):
     cur = conn.cursor()
     cur.execute("UPDATE waitlist SET in_progress=? WHERE id=?", (progress, patient_id))
+    success = cur.rowcount
     conn.commit()
+    patient_data = {'in_progress': get_patient(conn, patient_id)['in_progress']} if success > 0 else False
+    return patient_data
 
 def add_patient(conn, form_data):
     cur = conn.cursor()
@@ -39,6 +42,12 @@ def add_patient(conn, form_data):
     conn.commit()
     get_waitlist(conn) # Update waitlist order cache
     return insert_id
+
+def remove_patient(conn, patient_id):
+    cur = conn.cursor()
+    cur.execute("DELETE FROM waitlist WHERE id=?", (patient_id,))
+    conn.commit()
+    get_waitlist(conn) # Update waitlist order cache
 
 ### ROUTES ###
 
@@ -51,6 +60,8 @@ def new_patient_form():
         return redirect(url_for('patient_view', patient_id=patient_id))
     
     return render_template('new_patient_form.html')
+
+## PATIENT ##
 
 @app.route("/patient/<patient_id>")
 def patient_view(patient_id):
@@ -65,6 +76,8 @@ def get_wait_time(patient_id):
     position = waitlist_order_cache.get(int(patient_id), -1)
     return {'position': position[0], 'name': position[1]}
 
+## ADMIN ##
+
 @app.route("/admin")
 def waitlist_view():
     conn = get_db_connection()
@@ -72,16 +85,29 @@ def waitlist_view():
     conn.close()
     return render_template('waitlist.html', waitlist=waitlist)
 
-@app.route("/admin/view/<patient_id>")
+@app.route("/admin/<patient_id>/view")
 def doctor_view(patient_id):
     conn = get_db_connection()
     patient = get_patient(conn, patient_id)
-    #set_patient_progress(conn, patient_id, 1)
     conn.close()
     
     if patient is None:
         abort(404)
     return render_template('doctor_view.html', patient=patient)
+
+@app.route("/admin/<patient_id>/set_progress/<progress>", methods=['POST'])
+def change_patient_progress(patient_id, progress):
+    conn = get_db_connection()
+    success = set_patient_progress(conn, patient_id, progress)
+    conn.close()
+    return {'success': success}
+
+@app.route("/admin/<patient_id>/finished")
+def patient_finished(patient_id):
+    conn = get_db_connection()
+    patient_id = remove_patient(conn, patient_id)
+    conn.close()
+    return redirect(url_for('waitlist_view'))
 
 ### MAIN LOGIC ###
 
