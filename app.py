@@ -76,9 +76,9 @@ def get_wait_time(patient_id):
     position = waitlist_order_cache.get(int(patient_id), (-1, None))
     return {'position': position[0], 'name': position[1]}
 
-@app.route("/thank_you")
-def thank_you_view():
-    return render_template('thank_you.html')
+@app.route("/goodbye")
+def goodbye_view():
+    return render_template('goodbye.html')
 
 ## ADMIN ##
 

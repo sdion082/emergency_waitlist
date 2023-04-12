@@ -6,10 +6,17 @@
 </head>
 <body>
     <h1>Waitlist</h1>
+    <p><i>Last refreshed: <span id="lastUpdated"></span></i></p>
     <ol>
     {% for patient in waitlist %}
         <li><a href="{{ url_for('doctor_view', patient_id=patient.id) }}">{{ patient.name }} {{ "(in progress)" if patient.in_progress}}</a></li>
     {% endfor %}
     </ol>
+    <script type="text/javascript">
+        window.onload = function() {
+            var currentDate = new Date();
+            document.getElementById("lastUpdated").innerHTML = `${currentDate.toLocaleString()}`;
+        }
+    </script>
 </body>
 </html>

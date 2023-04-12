@@ -26,7 +26,7 @@
                     let responseJSON = JSON.parse(xhttp.responseText);
 
                     if (responseJSON.position < 0) {
-                        window.location.replace("{{ url_for('thank_you_view') }}");
+                        window.location.replace("{{ url_for('goodbye_view') }}");
                     }
 
                     document.getElementById("patientName").innerHTML = responseJSON.name;
