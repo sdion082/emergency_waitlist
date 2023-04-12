@@ -3,7 +3,7 @@
 
 J'ai utilisé Python (Flask) pour le backend et SQLite pour la base de données.
 
-[Schéma de base de données](/docs/database_schema.md)
+[Schéma de base de données](/docs/db_schema.md)
 
 ## Installation
 
